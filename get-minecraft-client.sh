@@ -29,11 +29,11 @@ if [[ $VERSION_JSON == "null" ]]; then
 fi
 
 # find the proper java - 8 before 1.13, 11 after
-javas=$(update-alternatives --list java)
-java8=$(echo "$javas" | grep -m1 "\-8.*java$" || true)
+javas=$(archlinux-java get)
+java8=$(echo "$javas" | grep -m1 "java-8.-*" || true)
 #java11=$(echo "$javas" | grep -m1 java-11 || true)
-java16=$(echo "$javas" | grep -m1 "\-16.*java$" || true)
-java17=$(echo "$javas" | grep -m1 "\-17.*java$" || true)
+java16=$(echo "$javas" | grep -m1 "java-16-*" || true)
+java17=$(echo "$javas" | grep -m1 "java-17-*" || true)
 version_slug=$(echo $MAINLINE_VERSION | cut -d . -f 2)
 if [[ $version_slug -le 16 ]]; then
     if [[ -z $java8 ]]; then
@@ -46,14 +46,14 @@ elif [[ $version_slug -le 17 ]]; then
         echo "Java 16 is required for mainline versions 1.17+. Only found these java versions: $javas"
         exit 1
     else
-        JAVA=$java16
+        JAVA=$jvm_dir/$java16/bin/java
     fi
 else
     if [[ -z $java17 ]]; then
         echo "Java 17 is required for mainline versions 1.18+. Only found these java versions: $javas"
         exit 1
     else
-        JAVA=$java17
+        JAVA=java
     fi
 fi
 
@@ -221,6 +221,7 @@ fi
 JVM_OPTS='-Xss1M -Djava.library.path=${natives_directory} -Dminecraft.launcher.brand=${launcher_name} -Dminecraft.launcher.version=${launcher_version} -Dlog4j.configurationFile=${log_path} -cp ${classpath}'
 
 CONFIG_FILE="versions/$MAINLINE_VERSION/$MAINLINE_VERSION.config"
+echo -n "$CONFIG_FILE"
 
 echo Creating bash config file $CONFIG_FILE
 cat > $CONFIG_FILE << EOC
@@ -232,7 +233,7 @@ auth_uuid=0
 auth_access_token=0
 clientid=0
 auth_xuid=0
-version_type=relase
+version_type=release
 user_type=legacy
 launcher_name="minecraft-launcher"
 launcher_version="2.1.1349"

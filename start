@@ -36,5 +36,5 @@ cd versions/$version_name/
 
 # extra tunings to run better
 JVM_OPTS="$JVM_OPTS -Xmx2G -XX:+UnlockExperimentalVMOptions -XX:+UseG1GC -XX:G1NewSizePercent=20 -XX:G1ReservePercent=20 -XX:MaxGCPauseMillis=50 -XX:G1HeapRegionSize=32M"
-
-$JAVA $JVM_OPTS $MAIN $GAME_ARGS
+echo -n "java $JVM_OPTS $MAIN $GAME_ARGS"
+java $JVM_OPTS $MAIN $GAME_ARGS
